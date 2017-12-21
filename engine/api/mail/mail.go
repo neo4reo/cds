@@ -1,36 +1,21 @@
 package mail
 
 import (
-	"bytes"
 	"crypto/tls"
 	"errors"
 	"fmt"
 	"net/mail"
 	"net/smtp"
-	"text/template"
+
+	"github.com/matcornic/hermes"
 
 	"github.com/ovh/cds/sdk"
 	"github.com/ovh/cds/sdk/log"
 )
 
-type emailParam struct {
-	URL string
-}
-
 var smtpUser, smtpPassword, smtpFrom, smtpHost, smtpPort string
 var smtpTLS, smtpEnable bool
-
-const templateSignedUP = `Welcome to CDS,
-
-You recently signed up for CDS.
-
-To verify your email address, follow this link :
-{{.URL}}
-
-Regards,
---
-CDS Team
-`
+var h hermes.Hermes
 
 // Init initializes configuration
 func Init(user, password, from, host, port string, tls, disable bool) {
@@ -41,6 +26,14 @@ func Init(user, password, from, host, port string, tls, disable bool) {
 	smtpPort = port
 	smtpTLS = tls
 	smtpEnable = !disable
+
+	h = hermes.Hermes{
+		Product: hermes.Product{
+			Name: "CDS",
+			Link: "https://github.com/ovh/cds",
+			Logo: "https://github.com/ovh/cds/blob/master/cds.png?raw=true",
+		},
+	}
 }
 
 // Status verification of smtp configuration, returns OK or KO
@@ -105,43 +98,33 @@ func smtpClient() (*smtp.Client, error) {
 // SendMailVerifyToken Send mail to verify user account
 func SendMailVerifyToken(userMail, username, token, callback string) error {
 	callbackURL := getCallbackURL(username, token, callback)
-
-	mailContent, err := createTemplate(templateSignedUP, callbackURL)
-	if err != nil {
-		return err
+	email := hermes.Email{
+		Body: hermes.Body{
+			Name: "Welcome to CDS",
+			Intros: []string{
+				"You recently signed up for CDS.",
+				"To verify your email address, follow this link : " + callbackURL,
+			},
+			Outros: []string{
+				"Regards",
+			},
+			Signature: "CDS Team",
+		},
 	}
-	return SendEmail("Welcome to CDS", &mailContent, userMail)
+	return SendEmail("Welcome to CDS", email, userMail)
 }
 
 func getCallbackURL(username, token, callback string) string {
 	return fmt.Sprintf(callback, username, token)
 }
 
-func createTemplate(templ, callbackURL string) (bytes.Buffer, error) {
-	var b bytes.Buffer
-
-	// Create mail template
-	t := template.New("Email template")
-	t, err := t.Parse(templ)
-	if err != nil {
-		fmt.Printf("Error with parsing template:%s \n", err.Error())
-		return b, err
-	}
-
-	param := emailParam{
-		URL: callbackURL,
-	}
-	err = t.Execute(&b, param)
-	if err != nil {
-		fmt.Printf("Error with Execute template:%s \n", err.Error())
-		return b, err
-	}
-
-	return b, nil
-}
-
 //SendEmail is the core function to send an email
-func SendEmail(subject string, mailContent *bytes.Buffer, userMail string) error {
+func SendEmail(subject string, email hermes.Email, userMail string) error {
+	emailBody, errE := h.GenerateHTML(email)
+	if errE != nil {
+		return sdk.WrapError(errE, "SendEmail> Unable to generate html email")
+	}
+
 	from := mail.Address{
 		Name:    "",
 		Address: smtpFrom,
@@ -162,7 +145,7 @@ func SendEmail(subject string, mailContent *bytes.Buffer, userMail string) error
 	for k, v := range headers {
 		message += fmt.Sprintf("%s: %s\r\n", k, v)
 	}
-	message += "\r\n" + mailContent.String()
+	message += "\r\n" + emailBody
 
 	if !smtpEnable {
 		fmt.Println("##### NO SMTP DISPLAY MAIL IN CONSOLE ######")

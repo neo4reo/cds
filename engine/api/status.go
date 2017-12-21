@@ -1,11 +1,12 @@
 package api
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/matcornic/hermes"
 
 	"github.com/ovh/cds/engine/api/event"
 	"github.com/ovh/cds/engine/api/mail"
@@ -68,7 +69,16 @@ func (api *API) smtpPingHandler() Handler {
 		}
 
 		message := "mail sent"
-		if err := mail.SendEmail("Ping", bytes.NewBufferString("Pong"), getUser(ctx).Email); err != nil {
+
+		email := hermes.Email{
+			Body: hermes.Body{
+				Name: "Ping",
+				Intros: []string{
+					"Pong",
+				},
+			},
+		}
+		if err := mail.SendEmail("Monitoring", email, getUser(ctx).Email); err != nil {
 			message = err.Error()
 		}
 
