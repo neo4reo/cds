@@ -1263,6 +1263,12 @@
 			"revisionTime": "2017-04-06T13:17:56Z"
 		},
 		{
+			"checksumSHA1": "HkNUuhYSk5C2fTMa536jBiORq44=",
+			"path": "github.com/shurcooL/sanitized_anchor_name",
+			"revision": "86672fcb3f950f35f2e675df2240550f2a50762f",
+			"revisionTime": "2017-09-05T02:47:45Z"
+		},
+		{
 			"checksumSHA1": "BYvROBsiyAXK4sq6yhDe8RgT4LM=",
 			"path": "github.com/sirupsen/logrus",
 			"revision": "89742aefa4b206dcf400792f3bd35b542998eb3b",
@@ -1345,6 +1351,12 @@
 			"path": "github.com/spf13/viper/remote",
 			"revision": "84f94806c67f59dd7ae87bc5351f7a9c94a4558d",
 			"revisionTime": "2017-03-15T13:43:09Z"
+		},
+		{
+			"checksumSHA1": "qErubHtC7DAFBnEQkMTuKDtfFTU=",
+			"path": "github.com/ssor/bom",
+			"revision": "6386211fdfcf24c0bfbdaceafd02849ed9a8a509",
+			"revisionTime": "2017-07-18T12:35:48Z"
 		},
 		{
 			"checksumSHA1": "iydUphwYqZRq3WhstEdGsbvBAKs=",
@@ -1621,6 +1633,18 @@
 			"path": "golang.org/x/net/context/ctxhttp",
 			"revision": "ea0da6f35caf3ff91581c800469e22eef75076f4",
 			"revisionTime": "2017-11-01T22:18:28Z"
+		},
+		{
+			"checksumSHA1": "2t6c6F2y4b/PEV04TOHpQxh/xLc=",
+			"path": "golang.org/x/net/html",
+			"revision": "d866cfc389cec985d6fda2859936a575a55a3ab6",
+			"revisionTime": "2017-12-11T20:45:21Z"
+		},
+		{
+			"checksumSHA1": "iWvOOLdDxvI4AVX6px6/HYBPeaQ=",
+			"path": "golang.org/x/net/html/atom",
+			"revision": "d866cfc389cec985d6fda2859936a575a55a3ab6",
+			"revisionTime": "2017-12-11T20:45:21Z"
 		},
 		{
 			"checksumSHA1": "zZG+ad2/41l7WmUsh2qkgUT2mLM=",
