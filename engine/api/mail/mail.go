@@ -120,11 +120,6 @@ func getCallbackURL(username, token, callback string) string {
 
 //SendEmail is the core function to send an email
 func SendEmail(subject string, email hermes.Email, userMail string) error {
-	emailBody, errE := h.GenerateHTML(email)
-	if errE != nil {
-		return sdk.WrapError(errE, "SendEmail> Unable to generate html email")
-	}
-
 	from := mail.Address{
 		Name:    "",
 		Address: smtpFrom,
@@ -145,7 +140,20 @@ func SendEmail(subject string, email hermes.Email, userMail string) error {
 	for k, v := range headers {
 		message += fmt.Sprintf("%s: %s\r\n", k, v)
 	}
-	message += "\r\n" + emailBody
+
+	if smtpEnable {
+		emailBody, errE := h.GenerateHTML(email)
+		if errE != nil {
+			return sdk.WrapError(errE, "SendEmail> Unable to generate html email")
+		}
+		message += "\r\n" + emailBody
+	} else {
+		emailBody, errE := h.GeneratePlainText(email)
+		if errE != nil {
+			return sdk.WrapError(errE, "SendEmail> Unable to generate plain text email")
+		}
+		message += "\r\n" + emailBody
+	}
 
 	if !smtpEnable {
 		fmt.Println("##### NO SMTP DISPLAY MAIL IN CONSOLE ######")
