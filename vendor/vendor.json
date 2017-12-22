@@ -793,6 +793,12 @@
 			"revisionTime": "2016-04-20T13:07:02Z"
 		},
 		{
+			"checksumSHA1": "PcuhcuC9KHkdK5nLfO+F4fgcy/8=",
+			"path": "github.com/jaytaylor/html2text",
+			"revision": "7cd445abb89c7dbb8220e616a1805fc904cc541b",
+			"revisionTime": "2017-12-14T19:37:48Z"
+		},
+		{
 			"checksumSHA1": "p66d/SakJX9MxMlqBThFk7IMb/s=",
 			"origin": "github.com/ovh/tat/vendor/github.com/jinzhu/now",
 			"path": "github.com/jinzhu/now",
@@ -1813,6 +1819,12 @@
 			"path": "gopkg.in/ldap.v2",
 			"revision": "0e7db8eb77695b5a952f0e5d78df9ab160050c73",
 			"revisionTime": "2016-04-15T03:57:59Z"
+		},
+		{
+			"checksumSHA1": "WrnWl9sC9qr8Ny0wkfKfnuwIxDM=",
+			"path": "gopkg.in/russross/blackfriday.v2",
+			"revision": "cadec560ec52d93835bf2f15bd794700d3a2473b",
+			"revisionTime": "2017-08-06T17:10:14Z"
 		},
 		{
 			"checksumSHA1": "Neja/m29s2ypv3jvoPyrK8kgCTM=",
