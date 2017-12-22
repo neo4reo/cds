@@ -111,4 +111,5 @@ type EventNotif struct {
 	Recipients []string `json:"recipients"`
 	Subject    string   `json:"subject,omitempty"`
 	Body       string   `json:"body,omitempty"`
+	Mode       string   `json:"mode,omitempty"`
 }

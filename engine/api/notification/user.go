@@ -69,7 +69,7 @@ func GetUserWorkflowEvents(db gorp.SqlExecutor, wr sdk.WorkflowRun, nr sdk.Workf
 
 				//Finally deduplicate everyone
 				removeDuplicates(&jn.Recipients)
-				events = append(events, getWorkflowEvent(jn, params))
+				events = append(events, getWorkflowEvent(jn, params, notif.Mode))
 			case sdk.EmailUserNotification:
 				jn, ok := notif.Settings.(*sdk.JabberEmailUserNotificationSettings)
 				if !ok {
@@ -104,7 +104,7 @@ func GetUserWorkflowEvents(db gorp.SqlExecutor, wr sdk.WorkflowRun, nr sdk.Workf
 				}
 				//Finally deduplicate everyone
 				removeDuplicates(&jn.Recipients)
-				go SendMailNotif(getWorkflowEvent(jn, params))
+				go SendMailNotif(getWorkflowEvent(jn, params, notif.Mode))
 			}
 		}
 	}
@@ -286,7 +286,7 @@ func ShouldSendUserNotification(notif sdk.UserNotificationSettings, current *sdk
 	return false
 }
 
-func getWorkflowEvent(notif *sdk.JabberEmailUserNotificationSettings, params map[string]string) sdk.EventNotif {
+func getWorkflowEvent(notif *sdk.JabberEmailUserNotificationSettings, params map[string]string, mode string) sdk.EventNotif {
 	subject := notif.Template.Subject
 	body := notif.Template.Body
 	for k, value := range params {
@@ -298,6 +298,7 @@ func getWorkflowEvent(notif *sdk.JabberEmailUserNotificationSettings, params map
 	e := sdk.EventNotif{
 		Subject: subject,
 		Body:    body,
+		Mode:    mode,
 	}
 	for _, r := range notif.Recipients {
 		e.Recipients = append(e.Recipients, r)

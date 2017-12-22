@@ -22,7 +22,7 @@ func SendMailNotif(notif sdk.EventNotif) {
 	}
 
 	for _, recipient := range notif.Recipients {
-		if err := mail.SendEmail(notif.Subject, email, recipient); err != nil {
+		if err := mail.SendEmail(notif.Subject, email, notif.Mode, recipient); err != nil {
 			errors = append(errors, err.Error())
 		}
 	}

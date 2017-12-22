@@ -111,7 +111,7 @@ func SendMailVerifyToken(userMail, username, token, callback string) error {
 			Signature: "CDS Team",
 		},
 	}
-	return SendEmail("Welcome to CDS", email, userMail)
+	return SendEmail("Welcome to CDS", email, "text", userMail)
 }
 
 func getCallbackURL(username, token, callback string) string {
@@ -119,7 +119,7 @@ func getCallbackURL(username, token, callback string) string {
 }
 
 //SendEmail is the core function to send an email
-func SendEmail(subject string, email hermes.Email, userMail string) error {
+func SendEmail(subject string, email hermes.Email, mode string, userMail string) error {
 	from := mail.Address{
 		Name:    "",
 		Address: smtpFrom,
@@ -141,13 +141,15 @@ func SendEmail(subject string, email hermes.Email, userMail string) error {
 		message += fmt.Sprintf("%s: %s\r\n", k, v)
 	}
 
-	if smtpEnable {
+	switch mode {
+	case "html":
+		headers["MIME-version: 1.0"] = "1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 		emailBody, errE := h.GenerateHTML(email)
 		if errE != nil {
 			return sdk.WrapError(errE, "SendEmail> Unable to generate html email")
 		}
 		message += "\r\n" + emailBody
-	} else {
+	default:
 		emailBody, errE := h.GeneratePlainText(email)
 		if errE != nil {
 			return sdk.WrapError(errE, "SendEmail> Unable to generate plain text email")

@@ -78,7 +78,7 @@ func (api *API) smtpPingHandler() Handler {
 				},
 			},
 		}
-		if err := mail.SendEmail("Monitoring", email, getUser(ctx).Email); err != nil {
+		if err := mail.SendEmail("Monitoring", email, "html", getUser(ctx).Email); err != nil {
 			message = err.Error()
 		}
 

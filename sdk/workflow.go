@@ -33,6 +33,7 @@ type WorkflowNotification struct {
 	SourceNodeRefs []string                     `json:"source_node_ref,omitempty" db:"-"`
 	SourceNodeIDs  []int64                      `json:"source_node_id,omitempty" db:"-"`
 	Type           UserNotificationSettingsType `json:"type"  db:"type"`
+	Mode           string                       `json:"mode"  db:"mode"`
 	Settings       UserNotificationSettings     `json:"settings"  db:"-"`
 }
 
