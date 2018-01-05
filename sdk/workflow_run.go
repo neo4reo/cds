@@ -202,7 +202,17 @@ func (a *WorkflowNodeRunArtifact) GetName() string {
 
 //GetPath returns the path of the artifact
 func (a *WorkflowNodeRunArtifact) GetPath() string {
-	container := fmt.Sprintf("%d-%d-%s", a.WorkflowID, a.WorkflowNodeRunID, a.Tag)
+	// common failure from user data. If user use a tag with
+	// a non-interpolate variable, as {{.plop}}
+	// this will returns a failure from switf for tempURL.
+	// So, we need to espace "{" and "}" before. Example:
+	// container := fmt.Sprintf("%d-%d-%s", 11, 22, "{{.plop}}")
+	// container = url.QueryEscape(container)
+	// returns 11-22-%7B%7B.plop%7D%7D
+
+	tag := strings.Replace(a.Tag, "{", "-", -1)
+	tag = strings.Replace(tag, "}", "-", -1)
+	container := fmt.Sprintf("%d-%d-%s", a.WorkflowID, a.WorkflowNodeRunID, tag)
 	container = url.QueryEscape(container)
 	container = strings.Replace(container, "/", "-", -1)
 	return container
